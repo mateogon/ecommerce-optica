@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tienda en línea de óptica</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<header>
+		<h1>Tienda en línea de óptica</h1>
+		<nav>
+			<ul>
+				<li><a href="index.html">Inicio</a></li>
+				<li><a href="productos.html">Productos</a></li>
+				<li><a href="login.html">Iniciar sesión</a></li>
+				<li><a href="carrito.html">Carrito de compras</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<form action="productos.html" method="get" >
+			<label for="tipo-lente">Tipo de lente:</label>
+			<select id="tipo-lente" name="tipo-lente">
+			  <option value="lente1">Lente 1</option>
+			  <option value="lente2">Lente 2</option>
+			  <option value="lente3">Lente 3</option>
+			  <option value="lente4">Lente 4</option>
+			</select><br>
+		  
+			<label for="graduacion">Graduación:</label>
+			<input type="range" id="graduacion" name="graduacion" min="-10" max="10"><br>
+		  
+			<label for="color">Color:</label>
+			<select id="color" name="color">
+			  <option value="negro">Negro</option>
+			  <option value="blanco">Blanco</option>
+			  <option value="rojo">Rojo</option>
+			  <option value="azul">Azul</option>
+			</select><br>
+		  
+			<label for="marca">Marca:</label>
+			<select id="marca" name="marca">
+			  <option value="marca1">Marca 1</option>
+			  <option value="marca2">Marca 2</option>
+			  <option value="marca3">Marca 3</option>
+			  <option value="marca4">Marca 4</option>
+			</select><br>
+		  
+			<input type="submit" value="Buscar">
+		  </form>
+		  
+
+		  <section class="content">	
+			<div class="gallery__thumnails">
+			  <img id ="1" class = "gallery__thumnail"src="./images/lente1.jpg" alt="thumnail">
+			  <img id ="2" class = "gallery__thumnail"src="./images/lente2.jpg" alt="thumnail">
+			  <img id ="3" class = "gallery__thumnail"src="./images/lente3.jpg" alt="thumnail">
+			  <img id ="4" class = "gallery__thumnail"src="./images/lente4.jpg" alt="thumnail">
+			</div>
+			</article>
+		  </section>
+	</main>
+
+</body>
+</html>

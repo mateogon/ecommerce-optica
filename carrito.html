@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carrito de compras</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Tienda en línea de óptica</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="login.html">Iniciar sesión</a></li>
+        <li><a href="carrito.html">Carrito de compras</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h2>Carrito de compras</h2>
+    <div id="cart-items">
+      <!-- Los productos agregados al carrito se mostrarán aquí -->
+    </div>
+  </main>
+  <script>
+    // Obtener los parámetros de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Obtener el valor del parámetro "producto" enviado desde la página anterior
+    const producto = urlParams.get('producto');
+    
+    // Mostrar el producto en el carrito
+    if (producto) {
+      const cartItems = document.getElementById('cart-items');
+      const productDiv = document.createElement('div');
+      productDiv.textContent = producto;
+      cartItems.appendChild(productDiv);
+    }
+  </script>
+</body>
+</html>
