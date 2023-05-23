@@ -1,0 +1,135 @@
+-- Instalar postgres
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+
+-- Ingresar a postgres
+sudo -i -u postgres
+
+-- Crear base de datos
+createdb optica
+
+-- Entrar a base de datos
+psql -d optica
+
+-- Crear tablas
+CREATE TABLE Usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre_usuario VARCHAR(50) NOT NULL,
+    tipo_usuario VARCHAR(50) NOT NULL,
+    contrasena VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    informacion_contacto TEXT
+);
+
+CREATE TABLE Productos (
+    id SERIAL PRIMARY KEY,
+    nombre_producto VARCHAR(50) NOT NULL,
+    descripcion TEXT,
+    categoria VARCHAR(50),
+    precio DECIMAL(10, 2),
+    image_url VARCHAR(255)
+);
+
+CREATE TABLE CarritoCompras (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    id_producto INT,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (id_producto) REFERENCES Productos(id)
+);
+
+CREATE TABLE Compras (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    id_producto INT,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (id_producto) REFERENCES Productos(id)
+);
+
+CREATE TABLE Inventario (
+    id SERIAL PRIMARY KEY,
+    id_producto INT,
+    cantidad INT,
+    FOREIGN KEY (id_producto) REFERENCES Productos(id)
+);
+
+CREATE TABLE Promociones (
+    id SERIAL PRIMARY KEY,
+    id_producto INT,
+    descripcion TEXT,
+    fecha_inicio DATE,
+    fecha_fin DATE,
+    FOREIGN KEY (id_producto) REFERENCES Productos(id)
+);
+
+CREATE TABLE Resenas (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    id_producto INT,
+    comentario TEXT,
+    calificacion INT,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (id_producto) REFERENCES Productos(id)
+);
+
+CREATE TABLE Notificaciones (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    mensaje TEXT,
+    fecha_notificacion DATE,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id)
+);
+
+CREATE TABLE MetodoPago (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    tipo_metodo VARCHAR(50),
+    detalles TEXT,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id)
+);
+
+CREATE TABLE Contacto (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    asunto TEXT,
+    mensaje TEXT,
+    fecha_contacto DATE,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id)
+);
+
+CREATE TABLE HistorialCompras (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    id_compra INT,
+    fecha_compra DATE,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (id_compra) REFERENCES Compras(id)
+);
+
+CREATE TABLE BusquedaProducto (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    id_producto INT,
+    fecha_busqueda DATE,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (id_producto) REFERENCES Productos(id)
+);
+
+CREATE TABLE ListaDeseos (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    id_producto INT,
+    fecha_agregado DATE,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (id_producto) REFERENCES Productos(id)
+);
+
+-- Insertar ejemplos de productos
+
+INSERT INTO productos (nombre_producto, descripcion, categoria, precio, image_url) 
+VALUES 
+('Gafas Modernas', 'Gafas modernas con armazón de metal, ideal para cualquier ocasión.', 'Metal', 120.99, 'ecommerce-optica/images/productos/1.jpg'), 
+('Gafas Vintage', 'Gafas estilo vintage con armazón de plástico, un toque de elegancia retro.', 'Plástico', 80.75, 'ecommerce-optica/images/productos/2.jpg'), 
+('Gafas Deportivas', 'Gafas deportivas resistentes con armazón flexible, perfectas para actividades al aire libre.', 'Deportivas', 150.50, 'ecommerce-optica/images/productos/3.jpg'), 
+('Gafas Clásicas', 'Gafas clásicas con armazón de metal, un diseño atemporal para todos los días.', 'Metal', 90.25, 'ecommerce-optica/images/productos/4.jpg'), 
+('Gafas Infantiles', 'Gafas con armazón de plástico colorido, divertidas y cómodas para los más pequeños.', 'Infantiles', 65.99, 'ecommerce-optica/images/productos/5.jpg');
