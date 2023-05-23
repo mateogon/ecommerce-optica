@@ -11,6 +11,9 @@ createdb optica
 -- Entrar a base de datos
 psql -d optica
 
+-- Crear contraseña
+\password postgres -- ingresa "password" para que funcione el db.js
+
 -- Crear tablas
 CREATE TABLE Usuarios (
     id SERIAL PRIMARY KEY,
