@@ -20,15 +20,16 @@ CREATE TABLE Usuarios (
     nombre_usuario VARCHAR(50) NOT NULL,
     tipo_usuario VARCHAR(50) NOT NULL,
     contrasena VARCHAR(50) NOT NULL,
-    email VARCHAR(50) NOT NULL,
-    informacion_contacto TEXT
+    email VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Productos (
     id SERIAL PRIMARY KEY,
     nombre_producto VARCHAR(50) NOT NULL,
     descripcion TEXT,
-    categoria VARCHAR(50),
+    tipo_lente VARCHAR(30),
+    color VARCHAR(15),
+    marca VARCHAR(30),
     precio DECIMAL(10, 2),
     image_url VARCHAR(255)
 );
@@ -129,10 +130,10 @@ CREATE TABLE ListaDeseos (
 
 -- Insertar ejemplos de productos
 
-INSERT INTO productos (nombre_producto, descripcion, categoria, precio, image_url) 
+INSERT INTO productos (nombre_producto, descripcion, tipo_lente, color, marca, precio, image_url) 
 VALUES 
-('Gafas Modernas', 'Gafas modernas con armazón de metal, ideal para cualquier ocasión.', 'Metal', 120.99, 'ecommerce-optica/images/productos/1.jpg'), 
-('Gafas Vintage', 'Gafas estilo vintage con armazón de plástico, un toque de elegancia retro.', 'Plástico', 80.75, 'ecommerce-optica/images/productos/2.jpg'), 
-('Gafas Deportivas', 'Gafas deportivas resistentes con armazón flexible, perfectas para actividades al aire libre.', 'Deportivas', 150.50, 'ecommerce-optica/images/productos/3.jpg'), 
-('Gafas Clásicas', 'Gafas clásicas con armazón de metal, un diseño atemporal para todos los días.', 'Metal', 90.25, 'ecommerce-optica/images/productos/4.jpg'), 
-('Gafas Infantiles', 'Gafas con armazón de plástico colorido, divertidas y cómodas para los más pequeños.', 'Infantiles', 65.99, 'ecommerce-optica/images/productos/5.jpg');
+('Gafas Modernas', 'Gafas modernas con armazón de metal, ideal para cualquier ocasión.', 'Lente 1', 'Negro', 'Marca 1', 120.99, '/images/productos/1.jpg'), 
+('Gafas Vintage', 'Gafas estilo vintage con armazón de plástico, un toque de elegancia retro.', 'Lente 4', 'Blanco', 'Marca 2', 80.75, '/images/productos/2.jpg'), 
+('Gafas Deportivas', 'Gafas deportivas resistentes con armazón flexible, perfectas para actividades al aire libre.', 'Lente 3', 'Azul', 'Marca 4', 150.50, '/images/productos/3.jpg'), 
+('Gafas Clásicas', 'Gafas clásicas con armazón de metal, un diseño atemporal para todos los días.', 'Lente 2', 'Rojo', 'Marca 3', 90.25, '/images/productos/4.jpg'), 
+('Gafas Infantiles', 'Gafas con armazón de plástico colorido, divertidas y cómodas para los más pequeños.', 'Lente 1', 'Negro', 'Marca 2', 65.99, '/images/productos/5.jpg');

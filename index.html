@@ -17,48 +17,97 @@
 		</nav>
 	</header>
 	<main>
-		<form action="productos.html" method="get" >
+		<form id="search-form">
 			<label for="tipo-lente">Tipo de lente:</label>
 			<select id="tipo-lente" name="tipo-lente">
-			  <option value="lente1">Lente 1</option>
-			  <option value="lente2">Lente 2</option>
-			  <option value="lente3">Lente 3</option>
-			  <option value="lente4">Lente 4</option>
+			  <option value="Lente 1">Lente 1</option>
+			  <option value="Lente 2">Lente 2</option>
+			  <option value="Lente 3">Lente 3</option>
+			  <option value="Lente 4">Lente 4</option>
 			</select><br>
-		  
-			<label for="graduacion">Graduación:</label>
-			<input type="range" id="graduacion" name="graduacion" min="-10" max="10"><br>
 		  
 			<label for="color">Color:</label>
 			<select id="color" name="color">
-			  <option value="negro">Negro</option>
-			  <option value="blanco">Blanco</option>
-			  <option value="rojo">Rojo</option>
-			  <option value="azul">Azul</option>
+			  <option value="Negro">Negro</option>
+			  <option value="Blanco">Blanco</option>
+			  <option value="Rojo">Rojo</option>
+			  <option value="Azul">Azul</option>
 			</select><br>
 		  
 			<label for="marca">Marca:</label>
 			<select id="marca" name="marca">
-			  <option value="marca1">Marca 1</option>
-			  <option value="marca2">Marca 2</option>
-			  <option value="marca3">Marca 3</option>
-			  <option value="marca4">Marca 4</option>
+			  <option value="Marca 1">Marca 1</option>
+			  <option value="Marca 2">Marca 2</option>
+			  <option value="Marca 3">Marca 3</option>
+			  <option value="Marca 4">Marca 4</option>
 			</select><br>
 		  
 			<input type="submit" value="Buscar">
-		  </form>
+		</form>
 		  
 
-		  <section class="content">	
-			<div class="gallery__thumnails">
-			  <img id ="1" class = "gallery__thumnail"src="./images/lente1.jpg" alt="thumnail">
-			  <img id ="2" class = "gallery__thumnail"src="./images/lente2.jpg" alt="thumnail">
-			  <img id ="3" class = "gallery__thumnail"src="./images/lente3.jpg" alt="thumnail">
-			  <img id ="4" class = "gallery__thumnail"src="./images/lente4.jpg" alt="thumnail">
+		<section class="content">	
+			<div class="products">
+				<!-- Las imágenes se cargarán dinámicamente aquí -->
 			</div>
-			</article>
-		  </section>
+		</section>
 	</main>
 
+	<script>
+		// Agregar lógica de JavaScript para interactuar con la API
+
+		// Obtener referencia al formulario de búsqueda
+		const searchForm = document.getElementById('search-form');
+
+		// Agregar evento de submit al formulario
+		searchForm.addEventListener('submit', (event) => {
+			event.preventDefault(); // Prevenir el envío del formulario
+
+			// Obtener los valores de los campos de búsqueda
+			const tipoLente = document.getElementById('tipo-lente').value;
+			const color = document.getElementById('color').value;
+			const marca = document.getElementById('marca').value;
+
+			// Construir la URL de búsqueda con los parámetros
+			const url = `/productos?tipo_lente=${tipoLente}&color=${color}&marca=${marca}`;
+
+			// Realizar la llamada a la API para obtener los productos filtrados
+			fetch(url)
+				.then(response => response.json())
+				.then(data => {
+					// Manejar los datos recibidos y mostrar los resultados en el front-end
+					const products = document.getElementsByClassName('products')[0];
+					products.innerHTML = '';
+					// Iterar sobre los productos y crear los elementos de imagen
+					data.forEach(producto => {
+						const product = document.createElement('div');
+						product.className = 'product';
+						const img = document.createElement('img');
+						img.src = producto.image_url;
+						img.alt = 'Producto '+img.id;
+						product.appendChild(img);
+						const nombre = document.createElement('h2');
+						nombre.innerHTML = producto.nombre_producto;
+						product.appendChild(nombre);
+						const descripcion = document.createElement('p');
+						descripcion.innerHTML = producto.descripcion;
+						product.appendChild(descripcion);
+						const precio = document.createElement('p');
+						precio.className = 'price';
+						precio.innerHTML = producto.precio;
+						product.appendChild(precio);
+						const boton = document.createElement('button');
+						boton.innerHTML = 'Agregar al carrito';
+						product.appendChild(boton);
+						products.appendChild(product);
+					});
+				})
+				.catch(error => {
+					console.error('Error al realizar la búsqueda:', error);
+				});
+		});
+
+		// Agregar lógica para interactuar con los productos seleccionados, carrito de compras, etc.
+	</script>
 </body>
 </html>
