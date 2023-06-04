@@ -78,11 +78,22 @@ const updateUser = (
   tipo_usuario,
   contrasena,
   email,
-  informacion_contacto
+  nombre,
+  apellido,
+  telefono
 ) => {
   return query(
-    "UPDATE Usuarios SET nombre_usuario = $1, tipo_usuario = $2, contrasena = $3, email = $4, informacion_contacto = $5 WHERE id = $6",
-    [nombre_usuario, tipo_usuario, contrasena, email, informacion_contacto, id]
+    "UPDATE Usuarios SET nombre_usuario = $1, tipo_usuario = $2, contrasena = $3, email = $4, nombre = $5, apellido = $6, telefono = $7 WHERE id = $8",
+    [
+      nombre_usuario,
+      tipo_usuario,
+      contrasena,
+      email,
+      nombre,
+      apellido,
+      telefono,
+      id,
+    ]
   );
 };
 
@@ -92,19 +103,20 @@ const createUser = (
   contrasena,
   email,
   nombre,
-  apellido
+  apellido,
+  telefono
 ) => {
-  console.log(
-    nombre_usuario,
-    tipo_usuario,
-    contrasena,
-    email,
-    nombre,
-    apellido
-  );
   return query(
-    "INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-    [nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido]
+    "INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido, telefono) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+    [
+      nombre_usuario,
+      tipo_usuario,
+      contrasena,
+      email,
+      nombre,
+      apellido,
+      telefono,
+    ]
   ).then((result) => result[0]);
 };
 

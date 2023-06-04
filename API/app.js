@@ -72,6 +72,7 @@ app.get("/perfil", (req, res) => {
     header: "partials/header",
     session: req.session,
     isUserLoggedIn: req.session && req.session.usuario,
+    usuario: req.session.usuario,
   });
 });
 
@@ -146,8 +147,15 @@ app.post("/api/usuarios/login", async (req, res) => {
 });
 
 app.post("/api/usuarios/register", async (req, res) => {
-  const { nombre_usuario, email, contrasena, tipo_usuario, nombre, apellido } =
-    req.body;
+  const {
+    nombre_usuario,
+    email,
+    contrasena,
+    tipo_usuario,
+    nombre,
+    apellido,
+    telefono,
+  } = req.body;
   console.log("req:", {
     method: req.method,
     url: req.url,
@@ -161,7 +169,8 @@ app.post("/api/usuarios/register", async (req, res) => {
       contrasena,
       email,
       nombre,
-      apellido
+      apellido,
+      telefono
     );
 
     if (newUser) {
@@ -183,7 +192,9 @@ app.put("/api/usuarios/:id", async (req, res) => {
     tipo_usuario,
     contrasena,
     email,
-    informacion_contacto,
+    nombre,
+    apellido,
+    telefono,
   } = req.body;
   try {
     await updateUser(
@@ -192,7 +203,9 @@ app.put("/api/usuarios/:id", async (req, res) => {
       tipo_usuario,
       contrasena,
       email,
-      informacion_contacto
+      nombre,
+      apellido,
+      telefono
     );
     res.json({ mensaje: "Perfil actualizado correctamente" });
   } catch (error) {
