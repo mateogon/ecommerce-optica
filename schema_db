@@ -1,0 +1,83 @@
+table_name	column_name	data_type
+busquedaproducto	id	integer
+busquedaproducto	id_usuario	integer
+busquedaproducto	id_producto	integer
+busquedaproducto	fecha_busqueda	date
+carritocompras	id	integer
+carritocompras	id_usuario	integer
+carritocompras	id_producto	integer
+compras	id	integer
+compras	id_usuario	integer
+compras	id_producto	integer
+contacto	id	integer
+contacto	id_usuario	integer
+contacto	asunto	text
+contacto	mensaje	text
+contacto	fecha_contacto	date
+historialcompras	id	integer
+historialcompras	id_usuario	integer
+historialcompras	id_compra	integer
+historialcompras	fecha_compra	date
+inventario	id	integer
+inventario	id_producto	integer
+inventario	cantidad	integer
+listadeseos	id	integer
+listadeseos	id_usuario	integer
+listadeseos	id_producto	integer
+listadeseos	fecha_agregado	date
+metodopago	id	integer
+metodopago	id_usuario	integer
+metodopago	tipo_metodo	character varying
+metodopago	detalles	text
+notificaciones	id	integer
+notificaciones	id_usuario	integer
+notificaciones	mensaje	text
+notificaciones	fecha_notificacion	date
+pg_stat_statements	userid	oid
+pg_stat_statements	dbid	oid
+pg_stat_statements	queryid	bigint
+pg_stat_statements	query	text
+pg_stat_statements	calls	bigint
+pg_stat_statements	total_time	double precision
+pg_stat_statements	min_time	double precision
+pg_stat_statements	max_time	double precision
+pg_stat_statements	mean_time	double precision
+pg_stat_statements	stddev_time	double precision
+pg_stat_statements	rows	bigint
+pg_stat_statements	shared_blks_hit	bigint
+pg_stat_statements	shared_blks_read	bigint
+pg_stat_statements	shared_blks_dirtied	bigint
+pg_stat_statements	shared_blks_written	bigint
+pg_stat_statements	local_blks_hit	bigint
+pg_stat_statements	local_blks_read	bigint
+pg_stat_statements	local_blks_dirtied	bigint
+pg_stat_statements	local_blks_written	bigint
+pg_stat_statements	temp_blks_read	bigint
+pg_stat_statements	temp_blks_written	bigint
+pg_stat_statements	blk_read_time	double precision
+pg_stat_statements	blk_write_time	double precision
+productos	id	integer
+productos	nombre_producto	character varying
+productos	descripcion	text
+productos	tipo_lente	character varying
+productos	color	character varying
+productos	marca	character varying
+productos	precio	numeric
+productos	image_url	character varying
+promociones	id	integer
+promociones	id_producto	integer
+promociones	descripcion	text
+promociones	fecha_inicio	date
+promociones	fecha_fin	date
+resenas	id	integer
+resenas	id_usuario	integer
+resenas	id_producto	integer
+resenas	comentario	text
+resenas	calificacion	integer
+usuarios	id	integer
+usuarios	nombre_usuario	character varying
+usuarios	tipo_usuario	character varying
+usuarios	contrasena	character varying
+usuarios	email	character varying
+usuarios	nombre	character varying
+usuarios	apellido	character varying
