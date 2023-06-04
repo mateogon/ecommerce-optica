@@ -106,10 +106,11 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-app.get("/productos", async (req, res) => {
+app.get("/api/productos", async (req, res) => {
   const { tipo_lente, color, marca } = req.query;
   try {
     const result = await searchProducts(tipo_lente, color, marca);
+    console.log("productos:", result); // add this line
     res.json(result);
   } catch (error) {
     console.error("Error al buscar productos:", error);
@@ -117,7 +118,7 @@ app.get("/productos", async (req, res) => {
   }
 });
 
-app.get("/productos/buscar", async (req, res) => {
+app.get("/api/productos/buscar", async (req, res) => {
   const { q } = req.query;
   try {
     const result = await searchProductsByNameOrDescription(q);
@@ -128,7 +129,7 @@ app.get("/productos/buscar", async (req, res) => {
   }
 });
 
-app.post("/usuarios/login", async (req, res) => {
+app.post("/api/usuarios/login", async (req, res) => {
   const { nombre_usuario, contrasena } = req.body;
   try {
     const result = await userLogin(nombre_usuario, contrasena);
@@ -144,7 +145,7 @@ app.post("/usuarios/login", async (req, res) => {
   }
 });
 
-app.post("/usuarios/register", async (req, res) => {
+app.post("/api/usuarios/register", async (req, res) => {
   const { nombre_usuario, email, contrasena, tipo_usuario, nombre, apellido } =
     req.body;
   console.log("req:", {
@@ -175,7 +176,7 @@ app.post("/usuarios/register", async (req, res) => {
   }
 });
 
-app.put("/usuarios/:id", async (req, res) => {
+app.put("/api/usuarios/:id", async (req, res) => {
   const { id } = req.params;
   const {
     nombre_usuario,
@@ -200,7 +201,7 @@ app.put("/usuarios/:id", async (req, res) => {
   }
 });
 
-app.post("/carrito", async (req, res) => {
+app.post("/api/carrito", async (req, res) => {
   const { id_usuario, id_producto } = req.body;
   try {
     await addToCart(id_usuario, id_producto);
@@ -211,7 +212,7 @@ app.post("/carrito", async (req, res) => {
   }
 });
 
-app.get("/usuarios/:id/cotizaciones", async (req, res) => {
+app.get("/api/usuarios/:id/cotizaciones", async (req, res) => {
   const { id } = req.params;
   try {
     const result = await getCotizations(id);
@@ -222,7 +223,7 @@ app.get("/usuarios/:id/cotizaciones", async (req, res) => {
   }
 });
 
-app.post("/usuarios/:id/receta", async (req, res) => {
+app.post("/api/usuarios/:id/receta", async (req, res) => {
   const { id } = req.params;
   const { receta } = req.body;
   try {
