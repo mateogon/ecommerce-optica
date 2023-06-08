@@ -44,6 +44,10 @@ app.use(express.static(path.join(__dirname, "..")));
 
 // Route handlers
 app.get("/", (req, res) => {
+  if (req.session == undefined || req.session.usuario == undefined) {
+    req.session = false;
+    req.session.usuario = false;
+  }
   res.render("index", {
     header: "partials/header",
     session: req.session,
@@ -52,6 +56,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/productos", (req, res) => {
+  if (req.session == undefined || req.session.usuario == undefined) {
+    req.session = false;
+    req.session.usuario = false;
+  }
   res.render("productos", {
     header: "partials/header",
     session: req.session,
@@ -60,6 +68,10 @@ app.get("/productos", (req, res) => {
 });
 
 app.get("/carrito", (req, res) => {
+  if (req.session == undefined || req.session.usuario == undefined) {
+    req.session = false;
+    req.session.usuario = false;
+  }
   res.render("carrito", {
     header: "partials/header",
     session: req.session,
@@ -68,6 +80,10 @@ app.get("/carrito", (req, res) => {
 });
 
 app.get("/perfil", (req, res) => {
+  if (req.session == undefined || req.session.usuario == undefined) {
+    req.session = false;
+    req.session.usuario = false;
+  }
   res.render("perfil", {
     header: "partials/header",
     session: req.session,
@@ -77,6 +93,10 @@ app.get("/perfil", (req, res) => {
 });
 
 app.get("/receta", (req, res) => {
+  if (req.session == undefined || req.session.usuario == undefined) {
+    req.session = false;
+    req.session.usuario = false;
+  }
   res.render("receta", {
     header: "partials/header",
     session: req.session,
@@ -85,6 +105,10 @@ app.get("/receta", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  if (req.session == undefined || req.session.usuario == undefined) {
+    req.session = false;
+    req.session.usuario = false;
+  }
   res.render("login", {
     header: "partials/header",
     session: req.session,
@@ -93,6 +117,10 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/registro", (req, res) => {
+  if (req.session == undefined || req.session.usuario == undefined) {
+    req.session = false;
+    req.session.usuario = false;
+  }
   res.render("registro", {
     header: "partials/header",
     session: req.session,
@@ -162,26 +190,19 @@ app.post("/api/usuarios/register", async (req, res) => {
     headers: req.headers,
     body: req.body,
   });
-  try {
-    const newUser = await createUser(
-      nombre_usuario,
-      tipo_usuario,
-      contrasena,
-      email,
-      nombre,
-      apellido,
-      telefono
-    );
+  try {    
+    const result = await query("SELECT id FROM Usuarios WHERE $1;", [email]);
+    if (result[0] == null) {
+      await query("INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido) VALUES ($1, $2, $3, $4, $5, $6)", [nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido]);
+      req.session.usuario = nombre_usuario; // Store the user in the session
 
-    if (newUser) {
-      req.session.usuario = newUser; // Store the user in the session
-      res.json({ mensaje: "Registro exitoso", usuario: newUser });
+      res.json({ mensaje: "Registro exitoso"});
     } else {
-      res.status(400).json({ mensaje: "Error al registrar" });
+      res.status(400).json({ mensaje: "Ya existe una cuenta registrada con este correo." });
     }
   } catch (error) {
-    console.error("Error al registrar:", error);
-    res.status(500).json({ mensaje: "Error al registrar" });
+    console.error("Error al registrar (1):", error);
+    res.status(500).json({ mensaje: "Error al registrar (1)" });
   }
 });
 

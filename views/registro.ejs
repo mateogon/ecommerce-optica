@@ -72,6 +72,9 @@
         var contrasena = $("#password").val();
         console.log("contrasena:", contrasena);
 
+        var confirmar_contrasena = $("#confirm-password").val();
+        console.log("confirmar contrasena:", confirmar_contrasena);
+
         var tipo_usuario = $("#tipo_usuario").val();
         console.log("tipo_usuario:", tipo_usuario);
 
@@ -84,7 +87,11 @@
         var telefono = $("#telefono").val();
         console.log("telefono:", telefono);
 
-        $.ajax({
+        if (contrasena != confirmar_contrasena){
+          alert('Las contraseñas deben coincidir!');
+        }
+        else {
+          $.ajax({
           url: "http://localhost:3000/api/usuarios/register",
           type: "POST",
           data: JSON.stringify({
@@ -104,8 +111,11 @@
           })
           .fail(function (xhr) {
             var errorMessage = xhr.responseText || "Error al registrar";
-            $("#registration-error").text(errorMessage);
+            alert(errorMessage);
+            console.log(xhr);
           });
+        }
+        
       });
     </script>
   </body>

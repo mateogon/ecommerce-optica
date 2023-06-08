@@ -59,7 +59,7 @@
 			const marca = document.getElementById('marca').value;
 
 			// Construir la URL de búsqueda con los parámetros
-			const url = `/productos?tipo_lente=${tipoLente}&color=${color}&marca=${marca}`;
+			const url = `api/productos?tipo_lente=${tipoLente}&color=${color}&marca=${marca}`;
 
 			// Realizar la llamada a la API para obtener los productos filtrados
 			fetch(url)
@@ -68,6 +68,11 @@
 					// Manejar los datos recibidos y mostrar los resultados en el front-end
 					const products = document.getElementsByClassName('products')[0];
 					products.innerHTML = '';
+					if (data.length === 0) {
+						const aviso = document.createElement('h2');
+						aviso.innerHTML = 'No hay productos que cumplan con lo solicitado.\n';
+						products.appendChild(aviso);
+					}
 					// Iterar sobre los productos y crear los elementos de imagen
 					data.forEach(producto => {
 						const product = document.createElement('div');
