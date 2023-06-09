@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Administración</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <%- include("partials/header") %>
+    <main>
+      <section class="content">
+        <h1>Agregar producto</h1>
+
+        <!-- Form to add product -->
+        <form id="add-product-form">
+          <label for="nombre_producto">Nombre del producto:</label>
+          <input
+            type="text"
+            id="nombre_producto"
+            name="nombre_producto"
+            required
+          />
+
+          <label for="descripcion">Descripción:</label>
+          <input type="text" id="descripcion" name="descripcion" required />
+
+          <label for="tipo_lente">Tipo de lente:</label>
+          <input type="text" id="tipo_lente" name="tipo_lente" required />
+
+          <label for="color">Color:</label>
+          <input type="text" id="color" name="color" required />
+
+          <label for="marca">Marca:</label>
+          <input type="text" id="marca" name="marca" required />
+
+          <label for="precio">Precio:</label>
+          <input type="text" id="precio" name="precio" required />
+
+          <label for="image_url">URL de la imagen:</label>
+          <input type="text" id="image_url" name="image_url" />
+
+          <button type="submit">Agregar producto</button>
+        </form>
+
+        <h1>Productos actuales</h1>
+
+        <!-- List of current products -->
+        <ul id="product-list">
+          <% productos.forEach(function(producto) { %>
+          <li>
+            <p><strong>Nombre: </strong><%= producto.nombre_producto %></p>
+            <p><strong>Descripción: </strong><%= producto.descripcion %></p>
+            <p><strong>Tipo de lente: </strong><%= producto.tipo_lente %></p>
+            <p><strong>Color: </strong><%= producto.color %></p>
+            <p><strong>Marca: </strong><%= producto.marca %></p>
+            <p><strong>Precio: $</strong><%= producto.precio %></p>
+            <p><strong>URL de imagen: </strong><%= producto.image_url %></p>
+
+            <img
+              style="width: 200px"
+              src="<%= producto.image_url %>"
+              alt="<%= producto.nombre_producto %>"
+            />
+
+            <button class="delete-product-button" data-id="<%= producto.id %>">
+              Eliminar producto
+            </button>
+          </li>
+          <% }); %>
+        </ul>
+      </section>
+    </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Submit form to add product
+        $("#add-product-form").on("submit", function (e) {
+          e.preventDefault();
+
+          // Get form values
+          var nombre_producto = $("#nombre_producto").val();
+          var descripcion = $("#descripcion").val();
+          var tipo_lente = $("#tipo_lente").val();
+          var color = $("#color").val();
+          var marca = $("#marca").val();
+          var precio = $("#precio").val();
+          var image_url = $("#image_url").val();
+
+          // Send POST request to add product
+          $.ajax({
+            url: "http://localhost:3000/api/productos/agregar", // Update the URL to the appropriate endpoint
+            type: "POST",
+            data: JSON.stringify({
+              nombre_producto: nombre_producto,
+              descripcion: descripcion,
+              tipo_lente: tipo_lente,
+              color: color,
+              marca: marca,
+              precio: precio,
+              image_url: image_url,
+            }),
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+          })
+            .done(function (data) {
+              alert("Producto agregado exitosamente!");
+
+              // Refresh product list
+              location.reload();
+            })
+            .fail(function (xhr) {
+              var errorMessage =
+                xhr.responseText || "Error al agregar producto";
+              alert(errorMessage);
+            });
+        });
+        $(".delete-product-button").on("click", function (e) {
+          e.preventDefault();
+
+          // Get product id
+          var product_id = $(this).data("id");
+
+          // Send DELETE request to remove product
+          $.ajax({
+            url: "http://localhost:3000/api/productos/eliminar/" + product_id,
+            type: "DELETE",
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+          })
+            .done(function (data) {
+              alert("Producto eliminado exitosamente!");
+
+              // Refresh product list
+              location.reload();
+            })
+            .fail(function (xhr) {
+              var errorMessage =
+                xhr.responseText || "Error al eliminar producto";
+              alert(errorMessage);
+            });
+        });
+      });
+    </script>
+  </body>
+</html>

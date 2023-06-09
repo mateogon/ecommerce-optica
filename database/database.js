@@ -45,6 +45,27 @@ const getBusquedaProductoByUser = (userId) =>
 const getListaDeseosByUser = (userId) =>
   query("SELECT * FROM ListaDeseos WHERE id_usuario = $1;", [userId]);
 
+const addProduct = (
+  nombre_producto,
+  descripcion,
+  tipo_lente,
+  color,
+  marca,
+  precio,
+  image_url
+) => {
+  return query(
+    "INSERT INTO Productos (nombre_producto, descripcion, tipo_lente, color, marca, precio, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+    [nombre_producto, descripcion, tipo_lente, color, marca, precio, image_url]
+  ).then((result) => result[0]);
+};
+
+const removeProduct = (id) => {
+  return query("DELETE FROM Productos WHERE id = $1 RETURNING *", [id]).then(
+    (result) => result[0]
+  );
+};
+
 const searchProducts = (tipo_lente, color, marca) => {
   let queryString;
   let values;
@@ -66,10 +87,10 @@ const searchProductsByNameOrDescription = (q) => {
 };
 
 const userLogin = (email, contrasena) => {
-  return query(
-    "SELECT * FROM Usuarios WHERE email = $1 AND contrasena = $2",
-    [email, contrasena]
-  );
+  return query("SELECT * FROM Usuarios WHERE email = $1 AND contrasena = $2", [
+    email,
+    contrasena,
+  ]);
 };
 
 const updateUser = (
@@ -136,6 +157,8 @@ const updateRecipe = (id, receta) => {
 };
 module.exports = {
   query,
+  addProduct,
+  removeProduct,
   searchProducts,
   searchProductsByNameOrDescription,
   userLogin,

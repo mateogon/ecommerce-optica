@@ -8,16 +8,19 @@
     <script>
       $(document).ready(function () {
         var isUserLoggedIn = <%- JSON.stringify(isUserLoggedIn) %>;
-
+        var usuario = <%- JSON.stringify(session.usuario) %>;
         // Check if the user session exists
         if (isUserLoggedIn) {
-          console.log("Hay sesión de usuario");
           // Hide the login link and show the logout link
           $("#login-link").hide();
           $("#register-link").hide();
           $("#logout-link").show();
+          if (usuario.tipo_usuario == "Admin") {
+            $("#admin-link").show();
+          } else {
+            $("#admin-link").hide();
+          }
         } else {
-          console.log("No hay sesión de usuario");
           // Show the login link and hide the logout link
           $("#login-link").show();
           $("#register-link").show();
@@ -51,7 +54,11 @@
           <li id="logout-link">
             <a href="#">Cerrar sesión</a>
           </li>
-          <% } else { %>
+          <li id="admin-link" style="display: none">
+            <a href="/admin">Administrar</a>
+            <% } else { %>
+          </li>
+
           <li id="login-link">
             <a href="/login">Iniciar sesión</a>
           </li>
@@ -61,7 +68,11 @@
           <li id="logout-link" style="display: none">
             <a href="#">Cerrar sesión</a>
           </li>
-          <% } %>
+          <li id="admin-link" style="display: none">
+            <a href="/admin">Administrar</a>
+            <% } %>
+          </li>
+
           <li><a href="/carrito">Carrito de compras</a></li>
           <li><a href="/perfil">Perfil</a></li>
           <li><a href="/receta">Adjuntar receta</a></li>

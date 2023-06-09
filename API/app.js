@@ -5,6 +5,8 @@ const bodyParser = require("body-parser"); // Don't forget to install it using n
 const path = require("path");
 const {
   query,
+  addProduct,
+  removeProduct,
   searchProducts,
   searchProductsByNameOrDescription,
   userLogin,
@@ -91,7 +93,25 @@ app.get("/perfil", (req, res) => {
     usuario: req.session.usuario,
   });
 });
-
+app.get("/admin", async (req, res) => {
+  if (req.session == undefined || req.session.usuario == undefined) {
+    req.session = false;
+    req.session.usuario = false;
+  }
+  const { tipo_lente, color, marca } = req.query;
+  try {
+    const result = await searchProducts(tipo_lente, color, marca);
+    res.render("admin", {
+      header: "partials/header",
+      session: req.session,
+      isUserLoggedIn: req.session && req.session.usuario,
+      usuario: req.session.usuario,
+      productos: result,
+    });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al buscar productos" });
+  }
+});
 app.get("/receta", (req, res) => {
   if (req.session == undefined || req.session.usuario == undefined) {
     req.session = false;
@@ -139,7 +159,6 @@ app.get("/api/productos", async (req, res) => {
   const { tipo_lente, color, marca } = req.query;
   try {
     const result = await searchProducts(tipo_lente, color, marca);
-    console.log("productos:", result); // add this line
     res.json(result);
   } catch (error) {
     console.error("Error al buscar productos:", error);
@@ -155,6 +174,55 @@ app.get("/api/productos/buscar", async (req, res) => {
   } catch (error) {
     console.error("Error al buscar productos:", error);
     res.status(500).json({ mensaje: "Error al buscar productos" });
+  }
+});
+
+app.post("/api/productos/agregar", async (req, res) => {
+  const {
+    nombre_producto,
+    descripcion,
+    tipo_lente,
+    color,
+    marca,
+    precio,
+    image_url,
+  } = req.body;
+
+  try {
+    const newProduct = await addProduct(
+      nombre_producto,
+      descripcion,
+      tipo_lente,
+      color,
+      marca,
+      precio,
+      image_url
+    );
+    res.json({
+      mensaje: "Producto agregado exitosamente!",
+      producto: newProduct,
+    });
+  } catch (error) {
+    console.error("Error al agregar producto:", error);
+    res.status(500).json({ mensaje: "Error al agregar producto" });
+  }
+});
+
+app.delete("/api/productos/eliminar/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const removedProduct = await removeProduct(id);
+    if (!removedProduct) {
+      return res.status(404).json({ mensaje: "Producto no encontrado" });
+    }
+    res.json({
+      mensaje: "Producto eliminado exitosamente!",
+      producto: removedProduct,
+    });
+  } catch (error) {
+    console.error("Error al eliminar producto:", error);
+    res.status(500).json({ mensaje: "Error al eliminar producto" });
   }
 });
 
@@ -191,16 +259,25 @@ app.post("/api/usuarios/register", async (req, res) => {
     headers: req.headers,
     body: req.body,
   });
-  try {    
-    const result = await query("SELECT id FROM Usuarios WHERE email = $1;", [email]);
+  try {
+    const result = await query("SELECT id FROM Usuarios WHERE email = $1;", [
+      email,
+    ]);
     if (result[0] == null) {
-      await query("INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido) VALUES ($1, $2, $3, $4, $5, $6)", [nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido]);
-      const result2 = await query("SELECT id FROM Usuarios WHERE email = $1;", [email]);
+      await query(
+        "INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido) VALUES ($1, $2, $3, $4, $5, $6)",
+        [nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido]
+      );
+      const result2 = await query("SELECT id FROM Usuarios WHERE email = $1;", [
+        email,
+      ]);
       req.session.usuario = result2[0]; // Store the user in the session
 
-      res.json({ mensaje: "Registro exitoso"});
+      res.json({ mensaje: "Registro exitoso" });
     } else {
-      res.status(400).json({ mensaje: "Ya existe una cuenta registrada con este correo." });
+      res
+        .status(400)
+        .json({ mensaje: "Ya existe una cuenta registrada con este correo." });
     }
   } catch (error) {
     console.error("Error al registrar (1):", error);

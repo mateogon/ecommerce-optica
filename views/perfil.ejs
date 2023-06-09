@@ -36,16 +36,6 @@
               placeholder="<%= usuario.nombre_usuario %>"
             />
 
-            <label for="email">Correo electrónico:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              value="<%= usuario.email %>"
-              placeholder="<%= usuario.email %>"
-            />
-
             <label for="nombre">Nombre:</label>
             <input
               type="text"
@@ -91,7 +81,6 @@
 
           // Get form values
           var nombre_usuario = $("#nombre_usuario").val();
-          var email = $("#email").val();
           var nombre = $("#nombre").val();
           var apellido = $("#apellido").val();
           var telefono = $("#telefono").val();
@@ -105,7 +94,7 @@
               nombre_usuario: nombre_usuario,
               tipo_usuario: "<%= String(usuario.tipo_usuario) %>",
               contrasena: "<%= usuario.contrasena %>",
-              email: email,
+              email: "<%= String(usuario.email) %>",
               nombre: nombre,
               apellido: apellido,
               telefono: telefono,
