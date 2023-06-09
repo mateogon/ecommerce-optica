@@ -159,10 +159,11 @@ app.get("/api/productos/buscar", async (req, res) => {
 });
 
 app.post("/api/usuarios/login", async (req, res) => {
-  const { nombre_usuario, contrasena } = req.body;
+  const { email, contrasena } = req.body;
+  console.log(req.body);
   try {
-    const result = await userLogin(nombre_usuario, contrasena);
-    if (result.length === 0) {
+    const result = await userLogin(email, contrasena);
+    if (result[0] == null) {
       res.status(401).json({ mensaje: "Credenciales inválidas" });
     } else {
       req.session.usuario = result[0]; // Store the user in the session
@@ -194,7 +195,8 @@ app.post("/api/usuarios/register", async (req, res) => {
     const result = await query("SELECT id FROM Usuarios WHERE email = $1;", [email]);
     if (result[0] == null) {
       await query("INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido) VALUES ($1, $2, $3, $4, $5, $6)", [nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido]);
-      req.session.usuario = nombre_usuario; // Store the user in the session
+      const result2 = await query("SELECT id FROM Usuarios WHERE email = $1;", [email]);
+      req.session.usuario = result2[0]; // Store the user in the session
 
       res.json({ mensaje: "Registro exitoso"});
     } else {

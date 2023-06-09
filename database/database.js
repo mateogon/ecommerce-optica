@@ -65,10 +65,10 @@ const searchProductsByNameOrDescription = (q) => {
   );
 };
 
-const userLogin = (nombre_usuario, contrasena) => {
+const userLogin = (email, contrasena) => {
   return query(
-    "SELECT * FROM Usuarios WHERE nombre_usuario = $1 AND contrasena = $2",
-    [nombre_usuario, contrasena]
+    "SELECT * FROM Usuarios WHERE email = $1 AND contrasena = $2",
+    [email, contrasena]
   );
 };
 
