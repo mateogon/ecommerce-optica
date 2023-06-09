@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tienda en línea de óptica</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<%- include("partials/header") %>
+	<main>
+		<div class="index-form">
+		<form id="search-form">
+			<label for="tipo-lente">Tipo de lente:</label>
+			<select id="tipo-lente" name="tipo-lente">
+			  <option value="Lente 1">Lente 1</option>
+			  <option value="Lente 2">Lente 2</option>
+			  <option value="Lente 3">Lente 3</option>
+			  <option value="Lente 4">Lente 4</option>
+			</select><br>
+		  
+			<label for="color">Color:</label>
+			<select id="color" name="color">
+			  <option value="Negro">Negro</option>
+			  <option value="Blanco">Blanco</option>
+			  <option value="Rojo">Rojo</option>
+			  <option value="Azul">Azul</option>
+			</select><br>
+		  
+			<label for="marca">Marca:</label>
+			<select id="marca" name="marca">
+			  <option value="Marca 1">Marca 1</option>
+			  <option value="Marca 2">Marca 2</option>
+			  <option value="Marca 3">Marca 3</option>
+			  <option value="Marca 4">Marca 4</option>
+			</select><br>
+		  
+			<input type="submit" value="Buscar">
+		</form>
+		  
+
+		<section class="content">	
+			<div class="products">
+				<!-- Las imágenes se cargarán dinámicamente aquí -->
+			</div>
+		</div>
+		</section>
+	</main>
+
+	<script>
+		// Agregar lógica de JavaScript para interactuar con la API
+
+		// Obtener referencia al formulario de búsqueda
+		const searchForm = document.getElementById('search-form');
+
+		// Agregar evento de submit al formulario
+		searchForm.addEventListener('submit', (event) => {
+			event.preventDefault(); // Prevenir el envío del formulario
+
+			// Obtener los valores de los campos de búsqueda
+			const tipoLente = document.getElementById('tipo-lente').value;
+			const color = document.getElementById('color').value;
+			const marca = document.getElementById('marca').value;
+
+			// Construir la URL de búsqueda con los parámetros
+			const url = `api/productos?tipo_lente=${tipoLente}&color=${color}&marca=${marca}`;
+
+			// Realizar la llamada a la API para obtener los productos filtrados
+			fetch(url)
+				.then(response => response.json())
+				.then(data => {
+					// Manejar los datos recibidos y mostrar los resultados en el front-end
+					const products = document.getElementsByClassName('products')[0];
+					products.innerHTML = '';
+					if (data.length === 0) {
+						const aviso = document.createElement('h2');
+						aviso.innerHTML = 'No hay productos que cumplan con lo solicitado.\n';
+						products.appendChild(aviso);
+					}
+					// Iterar sobre los productos y crear los elementos de imagen
+					data.forEach(producto => {
+						const product = document.createElement('div');
+						product.className = 'product';
+						const img = document.createElement('img');
+						img.src = producto.image_url;
+						img.alt = 'Producto '+img.id;
+						product.appendChild(img);
+						const nombre = document.createElement('h2');
+						nombre.innerHTML = producto.nombre_producto;
+						product.appendChild(nombre);
+						const descripcion = document.createElement('p');
+						descripcion.innerHTML = producto.descripcion;
+						product.appendChild(descripcion);
+						const precio = document.createElement('p');
+						precio.className = 'price';
+						precio.innerHTML = producto.precio;
+						product.appendChild(precio);
+						const boton = document.createElement('button');
+						boton.innerHTML = 'Agregar al carrito';
+						product.appendChild(boton);
+						products.appendChild(product);
+					});
+				})
+				.catch(error => {
+					console.error('Error al realizar la búsqueda:', error);
+				});
+		});
+	</script>
+</body>
+</html>
+</body>
+</html>

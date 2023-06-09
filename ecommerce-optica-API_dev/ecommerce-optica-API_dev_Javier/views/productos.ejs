@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Productos</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <%- include("partials/header") %>
+    <main>
+      <section class="content">
+        <div class="products">
+          <!-- Las imágenes se cargarán dinámicamente aquí -->
+        </div>
+      </section>
+    </main>
+    <script>
+      // Agregar lógica de JavaScript para interactuar con la API
+      fetch("/api/productos")
+        .then((response) => response.json())
+        .then((data) => {
+          // Manejar los datos recibidos y mostrar los resultados en el front-end
+          const products = document.getElementsByClassName("products")[0];
+          products.innerHTML = "";
+          // Iterar sobre los productos y crear los elementos de imagen
+          data.forEach((producto) => {
+            const product = document.createElement("div");
+            product.className = "product";
+            const img = document.createElement("img");
+            img.src = producto.image_url;
+            img.alt = "Producto " + img.id;
+            product.appendChild(img);
+            const nombre = document.createElement("h2");
+            nombre.innerHTML = producto.nombre_producto;
+            product.appendChild(nombre);
+            const descripcion = document.createElement("p");
+            descripcion.innerHTML = producto.descripcion;
+            product.appendChild(descripcion);
+            const precio = document.createElement("p");
+            precio.className = "price";
+            precio.innerHTML = producto.precio;
+            product.appendChild(precio);
+            const boton = document.createElement("button");
+            boton.innerHTML = "Agregar al carrito";
+            product.appendChild(boton);
+            products.appendChild(product);
+          });
+        });
+
+      // Agregar lógica para interactuar con los productos seleccionados, carrito de compras, etc.
+    </script>
+  </body>
+</html>

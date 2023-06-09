@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Registro</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <%- include(header) %>
+    <main>
+      <section class="content">
+        <div class="registration-form">
+          <form method="post" id="registration-form" accept-charset="UTF-8">
+            <label for="nombre_usuario">Nombre de usuario:</label>
+            <input
+              type="text"
+              id="nombre_usuario"
+              name="nombre_usuario"
+              required
+            />
+
+            <label for="email">Correo electrónico:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+            />
+            <div class="error" id="email-error">Ingresa un correo valido.</div>
+            
+
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required />
+
+            <label for="confirm-password">Confirmar contraseña:</label>
+            <input
+              type="password"
+              id="confirm-password"
+              name="confirm-password"
+              required
+            />
+
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required />
+
+            <label for="apellido">Apellido:</label>
+            <input type="text" id="apellido" name="apellido" required />
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" name="telefono" required />
+            <label for="tipo_usuario">Tipo de usuario:</label>
+            <select id="tipo_usuario" name="tipo_usuario" required>
+              <option value="Normal">Normal</option>
+              <option value="Admin">Admin</option>
+            </select>
+
+            <button type="submit">Registrarse</button>
+          </form>
+          <div class="error" id="registration-error"></div>
+        </div>
+      </section>
+    </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $("#registration-form").on("submit", function (e) {
+        e.preventDefault();
+
+        var nombre_usuario = $("#nombre_usuario").val();
+        console.log("nombre_usuario:", nombre_usuario);
+
+        var email = $("#email").val();
+        console.log("email:", email);
+
+        var contrasena = $("#password").val();
+        console.log("contrasena:", contrasena);
+
+        var confirmar_contrasena = $("#confirm-password").val();
+        console.log("confirmar contrasena:", confirmar_contrasena);
+
+        var tipo_usuario = $("#tipo_usuario").val();
+        console.log("tipo_usuario:", tipo_usuario);
+
+        var nombre = $("#nombre").val();
+        console.log("nombre:", nombre);
+
+        var apellido = $("#apellido").val();
+        console.log("apellido:", apellido);
+
+        var telefono = $("#telefono").val();
+        console.log("telefono:", telefono);
+
+        if (contrasena != confirmar_contrasena){
+          alert('Las contraseñas deben coincidir!');
+        }
+        else {
+          $.ajax({
+          url: "http://localhost:3000/api/usuarios/register",
+          type: "POST",
+          data: JSON.stringify({
+            nombre_usuario: nombre_usuario,
+            email: email,
+            contrasena: contrasena,
+            tipo_usuario: tipo_usuario,
+            nombre: nombre,
+            apellido: apellido,
+            telefono: telefono, // Add the phone number field
+          }),
+          dataType: "json",
+          contentType: "application/json; charset=UTF-8",
+        })
+          .done(function (data) {
+            alert(data.mensaje);
+          })
+          .fail(function (xhr) {
+            var errorMessage = xhr.responseText || "Error al registrar";
+            alert(errorMessage);
+            console.log(xhr);
+          });
+        }
+        
+      });
+    </script>
+  </body>
+</html>

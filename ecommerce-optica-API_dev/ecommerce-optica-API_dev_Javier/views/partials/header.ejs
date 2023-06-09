@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tienda en línea de óptica</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        var isUserLoggedIn = <%- JSON.stringify(isUserLoggedIn) %>;
+
+        // Check if the user session exists
+        if (isUserLoggedIn) {
+          console.log("Hay sesión de usuario");
+          // Hide the login link and show the logout link
+          $("#login-link").hide();
+          $("#register-link").hide();
+          $("#logout-link").show();
+        } else {
+          console.log("No hay sesión de usuario");
+          // Show the login link and hide the logout link
+          $("#login-link").show();
+          $("#register-link").show();
+          $("#logout-link").hide();
+        }
+
+        // Logout functionality
+        $("#logout-link").on("click", function (e) {
+          e.preventDefault();
+
+          // Redirect to the logout route
+          window.location.href = "/logout";
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <h2>Tienda en línea de óptica</h2>
+      <nav>
+        <ul>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/productos">Productos</a></li>
+          <% if (isUserLoggedIn) { %>
+          <li id="login-link" style="display: none">
+            <a href="/login">Iniciar sesión</a>
+          </li>
+          <li id="register-link" style="display: none">
+            <a href="/registro">Registrar</a>
+          </li>
+          <li id="logout-link">
+            <a href="#">Cerrar sesión</a>
+          </li>
+          <% } else { %>
+          <li id="login-link">
+            <a href="/login">Iniciar sesión</a>
+          </li>
+          <li id="register-link">
+            <a href="/registro">Registrar</a>
+          </li>
+          <li id="logout-link" style="display: none">
+            <a href="#">Cerrar sesión</a>
+          </li>
+          <% } %>
+          <li><a href="/carrito">Carrito de compras</a></li>
+          <li><a href="/perfil">Perfil</a></li>
+          <li><a href="/receta">Adjuntar receta</a></li>
+          <form action="/productos/buscar" method="GET">
+            <input type="text" name="q" placeholder="Buscar..." required />
+            <input type="submit" value="Buscar" />
+          </form>
+        </ul>
+      </nav>
+    </header>
+  </body>
+</html>

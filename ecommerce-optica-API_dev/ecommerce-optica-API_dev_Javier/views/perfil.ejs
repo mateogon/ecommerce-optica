@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Perfil</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <%- include("partials/header") %>
+    <main>
+      <section class="content">
+        <div class="profile-info">
+          <h1>Nombre de usuario:</h1>
+          <p><%= usuario.nombre_usuario %></p>
+
+          <h1>Email:</h1>
+          <p><%= usuario.email %></p>
+
+          <h1>Nombre:</h1>
+          <p><%= usuario.nombre %></p>
+
+          <h1>Apellido:</h1>
+          <p><%= usuario.apellido %></p>
+
+          <h1>Teléfono:</h1>
+          <p><%= usuario.telefono %></p>
+
+          <!-- Form to modify user data -->
+          <form id="update-profile-form">
+            <label for="nombre_usuario">Nombre de usuario:</label>
+            <input
+              type="text"
+              id="nombre_usuario"
+              name="nombre_usuario"
+              required
+              value="<%= usuario.nombre_usuario %>"
+              placeholder="<%= usuario.nombre_usuario %>"
+            />
+
+            <label for="email">Correo electrónico:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              value="<%= usuario.email %>"
+              placeholder="<%= usuario.email %>"
+            />
+
+            <label for="nombre">Nombre:</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              required
+              value="<%= usuario.nombre %>"
+              placeholder="<%= usuario.nombre %>"
+            />
+
+            <label for="apellido">Apellido:</label>
+            <input
+              type="text"
+              id="apellido"
+              name="apellido"
+              required
+              value="<%= usuario.apellido %>"
+              placeholder="<%= usuario.apellido %>"
+            />
+
+            <label for="telefono">Teléfono:</label>
+            <input
+              type="text"
+              id="telefono"
+              name="telefono"
+              required
+              value="<%= usuario.telefono %>"
+              placeholder="<%= usuario.telefono %>"
+            />
+
+            <button type="submit">Actualizar perfil</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Submit form to update user profile
+        $("#update-profile-form").on("submit", function (e) {
+          e.preventDefault();
+
+          // Get form values
+          var nombre_usuario = $("#nombre_usuario").val();
+          var email = $("#email").val();
+          var nombre = $("#nombre").val();
+          var apellido = $("#apellido").val();
+          var telefono = $("#telefono").val();
+
+          // Send PUT request to update user profile
+          $.ajax({
+            url: "http://localhost:3000/api/usuarios/<%= usuario.id %>", // Update the URL to include the user ID
+
+            type: "PUT", // Use the PUT method for updating
+            data: JSON.stringify({
+              nombre_usuario: nombre_usuario,
+              tipo_usuario: "<%= String(usuario.tipo_usuario) %>",
+              contrasena: "<%= usuario.contrasena %>",
+              email: email,
+              nombre: nombre,
+              apellido: apellido,
+              telefono: telefono,
+            }),
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+          })
+            .done(function (data) {
+              alert(data.mensaje);
+            })
+            .fail(function (xhr) {
+              var errorMessage =
+                xhr.responseText || "Error al actualizar perfil";
+              $("#update-profile-error").text(errorMessage);
+            });
+        });
+      });
+    </script>
+  </body>
+</html>
