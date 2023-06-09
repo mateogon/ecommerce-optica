@@ -108,6 +108,7 @@
         })
           .done(function (data) {
             alert(data.mensaje);
+            location.replace('/login');
           })
           .fail(function (xhr) {
             var errorMessage = xhr.responseText || "Error al registrar";

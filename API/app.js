@@ -268,10 +268,6 @@ app.post("/api/usuarios/register", async (req, res) => {
         "INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido) VALUES ($1, $2, $3, $4, $5, $6)",
         [nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido]
       );
-      const result2 = await query("SELECT id FROM Usuarios WHERE email = $1;", [
-        email,
-      ]);
-      req.session.usuario = result2[0]; // Store the user in the session
 
       res.json({ mensaje: "Registro exitoso" });
     } else {
