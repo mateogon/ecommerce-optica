@@ -256,3 +256,20 @@ body {
     width: 100%;
     height: 200px; /* Puedes ajustar esta altura según tus necesidades */
   }
+
+  .product {
+    position: relative;
+  }
+
+  .product button {
+    margin-top: 10px;
+  }
+
+  .additional-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    
+  }
+
+  
