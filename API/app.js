@@ -303,6 +303,11 @@ app.put("/api/usuarios/:id", async (req, res) => {
       apellido,
       telefono
     );
+    const result = await query("SELECT * FROM Usuarios WHERE email = $1;", [
+      req.session.usuario.email,
+    ]);
+    console.log(result);
+    req.session.usuario = result[0];
     res.json({ mensaje: "Perfil actualizado correctamente" });
   } catch (error) {
     console.error("Error al modificar el perfil:", error);
