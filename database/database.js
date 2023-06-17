@@ -25,7 +25,7 @@ const query = (queryString, values) => {
 const getUsuarios = () => query("SELECT * FROM Usuarios;");
 const getProductos = () => query("SELECT * FROM Productos;");
 const getCarritoComprasByUser = (userId) =>
-  query("SELECT * FROM CarritoCompras WHERE id_usuario = $1;", [userId]);
+  query("SELECT p.* FROM carritocompras cc JOIN productos p ON cc.id_producto = p.id WHERE cc.id_usuario = $1;", [userId]);
 const getComprasByUser = (userId) =>
   query("SELECT * FROM Compras WHERE id_usuario = $1;", [userId]);
 const getInventario = () => query("SELECT * FROM Inventario;");

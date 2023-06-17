@@ -98,15 +98,34 @@
 						precio.innerHTML = producto.precio;
 						product.appendChild(precio);
 
-						const boton = document.createElement("button");
-						boton.innerHTML = "Agregar al carrito";
-						product.appendChild(boton);
-						products.appendChild(product);
+						if(<%- JSON.stringify(isUserLoggedIn) %>){
+							var user_info = <%- JSON.stringify(session.usuario || {}) %>;
+							const boton = document.createElement("button");
+							boton.innerHTML = "Agregar al carrito";
+							boton.addEventListener('click', () => {
+								const data = {
+								id_usuario: user_info.id,
+								id_producto: producto.id
+								};
 
-						const botonAdicional = document.createElement("button");
-						botonAdicional.innerHTML = "Agregar a la lista de deseos";
-						botonAdicional.className = "additional-button";
-						product.appendChild(botonAdicional);
+								fetch('/api/carrito', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								body: JSON.stringify(data)
+								})
+								.then(response => response.json())
+								.then(responseData => {
+									alert(responseData.mensaje);
+								})
+								.catch(error => {
+									console.error('Error al agregar producto al carrito:', error);
+									alert('Error al agregar producto al carrito');
+								});
+							});
+							product.appendChild(boton);
+						}
 						products.appendChild(product);
 					});
 				})

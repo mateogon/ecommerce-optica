@@ -265,8 +265,8 @@ app.post("/api/usuarios/register", async (req, res) => {
     ]);
     if (result[0] == null) {
       await query(
-        "INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido) VALUES ($1, $2, $3, $4, $5, $6)",
-        [nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido]
+        "INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido, telefono) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+        [nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido, telefono]
       );
 
       res.json({ mensaje: "Registro exitoso" });
@@ -326,14 +326,14 @@ app.post("/api/carrito", async (req, res) => {
   }
 });
 
-app.get("/api/usuarios/:id/cotizaciones", async (req, res) => {
+app.get("/api/usuarios/:id/carrito", async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await getCotizations(id);
+    const result = await getCarritoComprasByUser(id);
     res.json(result);
   } catch (error) {
-    console.error("Error al obtener las cotizaciones:", error);
-    res.status(500).json({ mensaje: "Error al obtener las cotizaciones" });
+    console.error("Error al obtener el carrito de compras:", error);
+    res.status(500).json({ mensaje: "Error al obtener el carrito de compras" });
   }
 });
 

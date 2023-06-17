@@ -7,26 +7,49 @@
   <body>
     <%- include("partials/header") %>
     <main>
-      <h3>Carrito de compras</h3>
-      <button type="submit">Cotizaciones</button>
-      <div id="cart-items">
-        <!-- Los productos agregados al carrito se mostrarán aquí -->
-      </div>
+      <section class="content">
+        <div class="products">
+          <!-- Las imágenes se cargarán dinámicamente aquí -->
+        </div>
+      </section>
     </main>
     <script>
-      // Obtener los parámetros de la URL
-      const urlParams = new URLSearchParams(window.location.search);
+      // Agregar lógica de JavaScript para interactuar con la API
+      const idUsuario = <%- JSON.stringify(session.usuario.id) %>;
+      fetch("/api/usuarios/"+idUsuario+"/carrito")
+        .then((response) => response.json())
+        .then((data) => {
+          // Manejar los datos recibidos y mostrar los resultados en el front-end
+          const products = document.getElementsByClassName("products")[0];
+          products.innerHTML = "";
+          // Iterar sobre los productos y crear los elementos de imagen
+          data.forEach(producto => {
+						const product = document.createElement("div");
+						product.className = "product";
+						
+						const img = document.createElement("img");
+						img.src = producto.image_url;
+						img.alt = "Producto " + img.id;
+						product.appendChild(img);
 
-      // Obtener el valor del parámetro "producto" enviado desde la página anterior
-      const producto = urlParams.get("producto");
+						const nombre = document.createElement("h2");
+						nombre.innerHTML = producto.nombre_producto;
+						product.appendChild(nombre);
 
-      // Mostrar el producto en el carrito
-      if (producto) {
-        const cartItems = document.getElementById("cart-items");
-        const productDiv = document.createElement("div");
-        productDiv.textContent = producto;
-        cartItems.appendChild(productDiv);
-      }
+						const descripcion = document.createElement("p");
+						descripcion.innerHTML = producto.descripcion;
+						product.appendChild(descripcion);
+
+						const precio = document.createElement("p");
+						precio.className = "price";
+						precio.innerHTML = producto.precio;
+						product.appendChild(precio);
+
+						products.appendChild(product);
+					});
+        });
+
+      // Agregar lógica para interactuar con los productos seleccionados, carrito de compras, etc.
     </script>
   </body>
 </html>
