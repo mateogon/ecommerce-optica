@@ -25,10 +25,33 @@ const query = (queryString, values) => {
 const getUsuarios = () => query("SELECT * FROM Usuarios;");
 const getProductos = () => query("SELECT * FROM Productos;");
 const getCarritoComprasByUser = (userId) =>
-  query("SELECT p.* FROM carritocompras cc JOIN productos p ON cc.id_producto = p.id WHERE cc.id_usuario = $1;", [userId]);
+  query(
+    "SELECT p.* FROM carritocompras cc JOIN productos p ON cc.id_producto = p.id WHERE cc.id_usuario = $1;",
+    [userId]
+  );
 const getComprasByUser = (userId) =>
   query("SELECT * FROM Compras WHERE id_usuario = $1;", [userId]);
 const getInventario = () => query("SELECT * FROM Inventario;");
+const getInventarioProducto = (productId) => {
+  return query("SELECT * FROM Inventario WHERE id_producto = $1;", [productId]);
+};
+const setInventarioProducto = async (productId, quantity) => {
+  // First, try to update the quantity for productId
+  const updateResult = await query(
+    "UPDATE Inventario SET cantidad = $1 WHERE id_producto = $2;",
+    [quantity, productId]
+  );
+
+  // If no rows were updated, then productId doesn't exist in the Inventario table
+  // In this case, insert a new row for productId with the given quantity
+  if (updateResult.rowCount === 0) {
+    await query(
+      "INSERT INTO Inventario (id_producto, cantidad) VALUES ($1, $2);",
+      [productId, quantity]
+    );
+  }
+};
+
 const getPromociones = () => query("SELECT * FROM Promociones;");
 const getResenasByUser = (userId) =>
   query("SELECT * FROM Resenas WHERE id_usuario = $1;", [userId]);
@@ -172,6 +195,8 @@ module.exports = {
   getCarritoComprasByUser,
   getComprasByUser,
   getInventario,
+  getInventarioProducto,
+  setInventarioProducto,
   getPromociones,
   getResenasByUser,
   getNotificacionesByUser,

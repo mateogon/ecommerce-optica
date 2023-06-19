@@ -36,6 +36,7 @@ CREATE TABLE Productos (
     image_url VARCHAR(255)
 );
 
+
 CREATE TABLE CarritoCompras (
     id SERIAL PRIMARY KEY,
     id_usuario INT,
@@ -139,3 +140,11 @@ VALUES
 ('Gafas Deportivas', 'Gafas deportivas resistentes con armazón flexible, perfectas para actividades al aire libre.', 'Lente 3', 'Azul', 'Marca 4', 150.50, '/images/productos/3.jpg'), 
 ('Gafas Clásicas', 'Gafas clásicas con armazón de metal, un diseño atemporal para todos los días.', 'Lente 2', 'Rojo', 'Marca 3', 90.25, '/images/productos/4.jpg'), 
 ('Gafas Infantiles', 'Gafas con armazón de plástico colorido, divertidas y cómodas para los más pequeños.', 'Lente 1', 'Negro', 'Marca 2', 65.99, '/images/productos/5.jpg');
+
+
+INSERT INTO Inventario (id_producto, cantidad) VALUES
+(1, 10),
+(2, 5),
+(3, 8),
+(4, 3),
+(5, 12);

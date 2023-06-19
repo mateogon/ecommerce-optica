@@ -20,6 +20,8 @@ const {
   getCarritoComprasByUser,
   getComprasByUser,
   getInventario,
+  setInventarioProducto,
+  getInventarioProducto,
   getPromociones,
   getResenasByUser,
   getNotificacionesByUser,
@@ -100,18 +102,21 @@ app.get("/admin", async (req, res) => {
   }
   const { tipo_lente, color, marca } = req.query;
   try {
-    const result = await searchProducts(tipo_lente, color, marca);
+    const productos = await searchProducts(tipo_lente, color, marca);
+    const inventario = await getInventario();
     res.render("admin", {
       header: "partials/header",
       session: req.session,
       isUserLoggedIn: req.session && req.session.usuario,
       usuario: req.session.usuario,
-      productos: result,
+      productos: productos,
+      inventario: inventario,
     });
   } catch (error) {
     res.status(500).json({ mensaje: "Error al buscar productos" });
   }
 });
+
 app.get("/receta", (req, res) => {
   if (req.session == undefined || req.session.usuario == undefined) {
     req.session = false;
@@ -198,6 +203,9 @@ app.post("/api/productos/agregar", async (req, res) => {
       precio,
       image_url
     );
+
+    await setInventarioProducto(newProduct.id, 0);
+
     res.json({
       mensaje: "Producto agregado exitosamente!",
       producto: newProduct,
@@ -223,6 +231,15 @@ app.delete("/api/productos/eliminar/:id", async (req, res) => {
   } catch (error) {
     console.error("Error al eliminar producto:", error);
     res.status(500).json({ mensaje: "Error al eliminar producto" });
+  }
+});
+app.post("/api/productos/inventario", async (req, res) => {
+  const { id_producto, cantidad } = req.body;
+  try {
+    await setInventarioProducto(id_producto, cantidad);
+    res.status(200).json({ mensaje: "Inventario actualizado exitosamente" });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al actualizar el inventario" });
   }
 });
 
@@ -266,7 +283,15 @@ app.post("/api/usuarios/register", async (req, res) => {
     if (result[0] == null) {
       await query(
         "INSERT INTO Usuarios (nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido, telefono) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-        [nombre_usuario, tipo_usuario, contrasena, email, nombre, apellido, telefono]
+        [
+          nombre_usuario,
+          tipo_usuario,
+          contrasena,
+          email,
+          nombre,
+          apellido,
+          telefono,
+        ]
       );
 
       res.json({ mensaje: "Registro exitoso" });
