@@ -171,13 +171,25 @@ const addToCart = (id_usuario, id_producto) => {
   );
 };
 
-const getCotizations = (id) => {
-  return query("SELECT * FROM Compras WHERE id_usuario = $1", [id]);
+const addReceta = (id_usuario, ruta_pdf, fecha_subida) => {
+  return query(
+    "INSERT INTO Recetas (id_usuario, ruta_pdf, fecha_subida) VALUES ($1, $2, $3) RETURNING *",
+    [id_usuario, ruta_pdf, fecha_subida]
+  ).then((result) => result[0]);
 };
 
-const updateRecipe = (id, receta) => {
-  return query("UPDATE Usuarios SET receta = $1 WHERE id = $2", [receta, id]);
+// Remove recipe
+const removeReceta = (id) => {
+  return query("DELETE FROM Recetas WHERE id = $1 RETURNING *", [id]).then(
+    (result) => result[0]
+  );
 };
+
+// Search for recipes by user
+const buscarRecetasPorUsuario = (id_usuario) => {
+  return query("SELECT * FROM Recetas WHERE id_usuario = $1;", [id_usuario]);
+};
+
 module.exports = {
   query,
   addProduct,
@@ -188,8 +200,6 @@ module.exports = {
   createUser,
   updateUser,
   addToCart,
-  getCotizations,
-  updateRecipe,
   getUsuarios,
   getProductos,
   getCarritoComprasByUser,
@@ -205,4 +215,7 @@ module.exports = {
   getHistorialComprasByUser,
   getBusquedaProductoByUser,
   getListaDeseosByUser,
+  addReceta,
+  removeReceta,
+  buscarRecetasPorUsuario,
 };

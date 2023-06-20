@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Recetas</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <%- include("partials/header") %>
+    <main>
+      <div class="form-wrapper">
+        <form id="upload-form" enctype="multipart/form-data">
+          <input type="file" name="receta" id="receta" />
+          <button type="submit">Subir receta</button>
+        </form>
+      </div>
+      <section class="content">
+        <h1 class="titulo">Recetas actuales</h1>
+        <div class="recetas">
+          <!-- Las recetas se cargarán dinámicamente aquí -->
+          <ul id="receta-list">
+            <% recetas.forEach(function(receta) { %>
+            <li>
+              <% const pdfName = receta.ruta_pdf.replace('uploads/', ''); %>
+              <p><strong>Nombre: </strong><%= pdfName %></p>
+              <p>
+                <strong>Fecha de subida: </strong><%= receta.fecha_subida %>
+              </p>
+              <button class="delete-recipe-button" data-id="<%= receta.id %>">
+                Eliminar receta
+              </button>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Submit form to upload recipe
+        $("#upload-form").on("submit", function (e) {
+          e.preventDefault();
+
+          var formData = new FormData();
+          formData.append("receta", $("#receta")[0].files[0]);
+
+          // Send POST request to upload recipe
+          $.ajax({
+            url: "http://localhost:3000/api/usuarios/<%= usuario.id %>/recetas",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+          })
+            .done(function (data) {
+              alert("Receta subida exitosamente!");
+
+              // Refresh recipe list
+              location.reload();
+            })
+            .fail(function (xhr) {
+              var errorMessage = xhr.responseText || "Error al subir receta";
+              alert(errorMessage);
+            });
+        });
+
+        // Delete recipe
+        $(".delete-recipe-button").on("click", function (e) {
+          e.preventDefault();
+
+          // Get recipe id
+          var receta_id = $(this).data("id");
+
+          // Send DELETE request to remove recipe
+          $.ajax({
+            url: "http://localhost:3000/api/recetas/" + receta_id,
+            type: "DELETE",
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+          })
+            .done(function (data) {
+              alert("Receta eliminada exitosamente!");
+
+              // Refresh recipe list
+              location.reload();
+            })
+            .fail(function (xhr) {
+              var errorMessage = xhr.responseText || "Error al eliminar receta";
+              alert(errorMessage);
+            });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -131,6 +131,14 @@ CREATE TABLE ListaDeseos (
     FOREIGN KEY (id_producto) REFERENCES Productos(id)
 );
 
+CREATE TABLE Recetas (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT,
+    ruta_pdf VARCHAR(255) NOT NULL,
+    fecha_subida DATE NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id)
+);
+
 -- Insertar ejemplos de productos
 
 INSERT INTO productos (nombre_producto, descripcion, tipo_lente, color, marca, precio, image_url) 

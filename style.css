@@ -202,7 +202,8 @@ button:hover {
 
 .index-form {
   max-width: 500px;
-  margin: 0 auto;
+
+  margin: 50px auto;
 }
 
 .index-form label {
@@ -285,4 +286,11 @@ button:hover {
 }
 .titulo {
   margin: 30px;
+}
+
+.profile-info {
+  border-radius: 5px;
+  padding: 30px;
+  margin: 30px;
+  background-color: #ccc;
 }

@@ -1,7 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser"); // Don't forget to install it using npm install body-parser
-
+const multer = require("multer");
 const path = require("path");
 const {
   query,
@@ -13,8 +13,6 @@ const {
   createUser,
   updateUser,
   addToCart,
-  getCotizations,
-  updateRecipe,
   getUsuarios,
   getProductos,
   getCarritoComprasByUser,
@@ -30,6 +28,9 @@ const {
   getHistorialComprasByUser,
   getBusquedaProductoByUser,
   getListaDeseosByUser,
+  addReceta,
+  removeReceta,
+  buscarRecetasPorUsuario,
 } = require("../database/database");
 
 const app = express();
@@ -42,7 +43,16 @@ app.use(
     saveUninitialized: true,
   })
 );
-
+// Configura multer para almacenar archivos en el directorio 'uploads'
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "..")));
 
@@ -117,15 +127,18 @@ app.get("/admin", async (req, res) => {
   }
 });
 
-app.get("/receta", (req, res) => {
+app.get("/recetas", async (req, res) => {
   if (req.session == undefined || req.session.usuario == undefined) {
     req.session = false;
     req.session.usuario = false;
   }
-  res.render("receta", {
+  const recetas = await buscarRecetasPorUsuario(req.session.usuario.id);
+  res.render("recetas", {
     header: "partials/header",
     session: req.session,
     isUserLoggedIn: req.session && req.session.usuario,
+    usuario: req.session.usuario,
+    recetas: recetas,
   });
 });
 
@@ -362,15 +375,55 @@ app.get("/api/usuarios/:id/carrito", async (req, res) => {
   }
 });
 
-app.post("/api/usuarios/:id/receta", async (req, res) => {
+// Añade una receta a la base de datos
+app.post(
+  "/api/usuarios/:id/recetas",
+  upload.single("receta"),
+  async (req, res) => {
+    const { id } = req.params;
+    const ruta_pdf = req.file.path; // Esta es la ruta del archivo subido
+    const fecha_subida = new Date();
+
+    try {
+      const newReceta = await addReceta(id, ruta_pdf, fecha_subida);
+      res.json({
+        mensaje: "Receta agregada exitosamente!",
+        receta: newReceta,
+      });
+    } catch (error) {
+      console.error("Error al agregar receta:", error);
+      res.status(500).json({ mensaje: "Error al agregar receta" });
+    }
+  }
+);
+
+// Elimina una receta de la base de datos
+app.delete("/api/recetas/:id", async (req, res) => {
   const { id } = req.params;
-  const { receta } = req.body;
   try {
-    await attachPrescription(id, receta);
-    res.json({ mensaje: "Receta adjuntada correctamente" });
+    const removedReceta = await removeReceta(id);
+    if (!removedReceta) {
+      return res.status(404).json({ mensaje: "Receta no encontrada" });
+    }
+    res.json({
+      mensaje: "Receta eliminada exitosamente!",
+      receta: removedReceta,
+    });
   } catch (error) {
-    console.error("Error al adjuntar la receta:", error);
-    res.status(500).json({ mensaje: "Error al adjuntar la receta" });
+    console.error("Error al eliminar receta:", error);
+    res.status(500).json({ mensaje: "Error al eliminar receta" });
+  }
+});
+
+// Busca todas las recetas de un usuario
+app.get("/api/usuarios/:id/recetas", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const recetas = await buscarRecetasPorUsuario(id);
+    res.json(recetas);
+  } catch (error) {
+    console.error("Error al buscar recetas:", error);
+    res.status(500).json({ mensaje: "Error al buscar recetas" });
   }
 });
 
