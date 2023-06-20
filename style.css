@@ -300,3 +300,12 @@ button:hover {
   margin: 30px;
   background-color: #ccc;
 }
+
+.checkout-container {
+  padding: 30px;
+  margin: 20px;
+}
+.carrito-container {
+  min-height: 100vh; /* Set a minimum height to cover the full viewport height */
+  overflow-y: scroll; /* Enable vertical scrolling */
+}

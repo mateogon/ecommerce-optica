@@ -13,14 +13,16 @@
         </div>
       </section>
       <section class="checkout">
-        <h2>Total: <span id="total">$0.00</span></h2>
-        <select id="paymentMethod">
-          <option value="Tarjeta de débito">Tarjeta de débito</option>
-          <option value="Tarjeta de crédito">Tarjeta de crédito</option>
-          <option value="PayPal">PayPal</option>
-          <!-- Añade aquí más métodos de pago si los tienes -->
-        </select>
-        <button id="btnCheckout">Realizar compra</button>
+        <div class="checkout-container carrito-container">
+          <h2>Total: <span id="total">$0.00</span></h2>
+          <select id="paymentMethod">
+            <option value="Tarjeta de débito">Tarjeta de débito</option>
+            <option value="Tarjeta de crédito">Tarjeta de crédito</option>
+            <option value="PayPal">PayPal</option>
+            <!-- Añade aquí más métodos de pago si los tienes -->
+          </select>
+          <button id="btnCheckout">Realizar compra</button>
+        </div>
       </section>
     </main>
     <script>
@@ -53,7 +55,7 @@
 
             const precio = document.createElement("p");
             precio.className = "price";
-            precio.innerHTML = producto.precio;
+            precio.innerHTML = "$"+producto.precio;
             product.appendChild(precio);
 
             const botonEliminar = document.createElement("button");
