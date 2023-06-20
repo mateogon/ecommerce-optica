@@ -11,24 +11,11 @@
         var usuario = <%- JSON.stringify(session.usuario || {}) %>;
         // Check if the user session exists
         if (isUserLoggedIn) {
-          // Hide the login link and show the logout link
-          $("#login-link").hide();
-          $("#register-link").hide();
-          $("#logout-link").show();
-          $("#profile-link").show();
-          $("#carrito-link").show();
           if (usuario.tipo_usuario == "Admin") {
             $("#admin-link").show();
           } else {
             $("#admin-link").hide();
           }
-        } else {
-          // Show the login link and hide the logout link
-          $("#login-link").show();
-          $("#register-link").show();
-          $("#logout-link").hide();
-          $("#profile-link").hide();
-          $("#carrito-link").hide();
         }
 
         // Logout functionality
@@ -49,19 +36,20 @@
           <li><a href="/">Inicio</a></li>
           <li><a href="/productos">Productos</a></li>
           <% if (isUserLoggedIn) { %>
-          <li id="login-link" style="display: none">
-            <a href="/login">Iniciar sesión</a>
-          </li>
-          <li id="register-link" style="display: none">
-            <a href="/registro">Registrar</a>
-          </li>
           <li id="logout-link">
             <a href="#">Cerrar sesión</a>
           </li>
           <li id="admin-link" style="display: none">
             <a href="/admin">Administrar</a>
-            <% } else { %>
           </li>
+          <li id="carrito-link">
+            <a href="/carrito">Carrito de compras</a>
+          </li>
+          <li id="profile-link">
+            <a href="/perfil">Perfil</a>
+          </li>
+          <li><a href="/recetas">Recetas</a></li>
+          <% } else { %>
 
           <li id="login-link">
             <a href="/login">Iniciar sesión</a>
@@ -69,19 +57,8 @@
           <li id="register-link">
             <a href="/registro">Registrar</a>
           </li>
-          <li id="logout-link" style="display: none">
-            <a href="#">Cerrar sesión</a>
-          </li>
-          <li id="admin-link" style="display: none">
-            <a href="/admin">Administrar</a>
-            <% } %>
-          </li>
+          <% } %>
 
-          <li><a id="carrito-link" href="/carrito">Carrito de compras</a></li>
-          <li id="profile-link" style="display: none">
-            <a href="/perfil">Perfil</a>
-          </li>
-          <li><a href="/recetas">Recetas</a></li>
           <form action="/productos/buscar" method="GET">
             <input type="text" name="q" placeholder="Buscar..." required />
             <input type="submit" value="Buscar" />
