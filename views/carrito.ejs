@@ -12,44 +12,101 @@
           <!-- Las imágenes se cargarán dinámicamente aquí -->
         </div>
       </section>
+      <section class="checkout">
+        <h2>Total: <span id="total">$0.00</span></h2>
+        <select id="paymentMethod">
+          <option value="Tarjeta de débito">Tarjeta de débito</option>
+          <option value="Tarjeta de crédito">Tarjeta de crédito</option>
+          <option value="PayPal">PayPal</option>
+          <!-- Añade aquí más métodos de pago si los tienes -->
+        </select>
+        <button id="btnCheckout">Realizar compra</button>
+      </section>
     </main>
     <script>
-      // Agregar lógica de JavaScript para interactuar con la API
       const idUsuario = <%- JSON.stringify(session.usuario.id) %>;
+
       fetch("/api/usuarios/"+idUsuario+"/carrito")
         .then((response) => response.json())
         .then((data) => {
-          // Manejar los datos recibidos y mostrar los resultados en el front-end
           const products = document.getElementsByClassName("products")[0];
           products.innerHTML = "";
-          // Iterar sobre los productos y crear los elementos de imagen
+
+          let total = 0;
+
           data.forEach(producto => {
-						const product = document.createElement("div");
-						product.className = "product";
-						
-						const img = document.createElement("img");
-						img.src = producto.image_url;
-						img.alt = "Producto " + img.id;
-						product.appendChild(img);
+            const product = document.createElement("div");
+            product.className = "product";
 
-						const nombre = document.createElement("h2");
-						nombre.innerHTML = producto.nombre_producto;
-						product.appendChild(nombre);
+            const img = document.createElement("img");
+            img.src = producto.image_url;
+            img.alt = "Producto " + img.id;
+            product.appendChild(img);
 
-						const descripcion = document.createElement("p");
-						descripcion.innerHTML = producto.descripcion;
-						product.appendChild(descripcion);
+            const nombre = document.createElement("h2");
+            nombre.innerHTML = producto.nombre_producto;
+            product.appendChild(nombre);
 
-						const precio = document.createElement("p");
-						precio.className = "price";
-						precio.innerHTML = producto.precio;
-						product.appendChild(precio);
+            const descripcion = document.createElement("p");
+            descripcion.innerHTML = producto.descripcion;
+            product.appendChild(descripcion);
 
-						products.appendChild(product);
-					});
+            const precio = document.createElement("p");
+            precio.className = "price";
+            precio.innerHTML = producto.precio;
+            product.appendChild(precio);
+
+            const botonEliminar = document.createElement("button");
+            botonEliminar.innerHTML = "Eliminar del carrito";
+            botonEliminar.addEventListener('click', () => {
+              fetch('/api/usuarios/' + idUsuario + '/carrito/' + producto.id, {
+                method: 'DELETE'
+              })
+              .then(response => response.json())
+              .then(responseData => {
+                alert(responseData.mensaje);
+                location.reload();
+              })
+              .catch(error => {
+                console.error('Error al eliminar producto del carrito:', error);
+                alert('Error al eliminar producto del carrito');
+              });
+            });
+            product.appendChild(botonEliminar);
+            products.appendChild(product);
+
+            total += parseFloat(producto.precio); // Asegúrate de que el precio sea un número
+          });
+
+          // Actualiza el texto del total
+          document.getElementById("total").textContent = "$" + total.toFixed(2);
+
+          // Añade un controlador de eventos al botón de checkout
+          document.getElementById("btnCheckout").addEventListener("click", () => {
+            const metodoPago = document.getElementById("paymentMethod").value;
+
+            fetch("/api/comprar", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                idUsuario: idUsuario,
+                metodoPago: metodoPago,
+                total: total
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              alert("Compra realizada con éxito. Gracias por tu compra!");
+              location.reload();
+            })
+            .catch(error => {
+              alert("Hubo un error al realizar la compra. Por favor, inténtalo de nuevo más tarde.");
+              console.error("Error al realizar la compra:", error);
+            });
+          });
         });
-
-      // Agregar lógica para interactuar con los productos seleccionados, carrito de compras, etc.
     </script>
   </body>
 </html>

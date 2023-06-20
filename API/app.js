@@ -13,6 +13,7 @@ const {
   createUser,
   updateUser,
   addToCart,
+  removeFromCart,
   getUsuarios,
   getProductos,
   getCarritoComprasByUser,
@@ -372,6 +373,17 @@ app.get("/api/usuarios/:id/carrito", async (req, res) => {
   } catch (error) {
     console.error("Error al obtener el carrito de compras:", error);
     res.status(500).json({ mensaje: "Error al obtener el carrito de compras" });
+  }
+});
+
+app.delete("/api/usuarios/:idUsuario/carrito/:idProducto", async (req, res) => {
+  const { idUsuario, idProducto } = req.params;
+  try {
+    await removeFromCart(idUsuario, idProducto);
+    res.json({ mensaje: "Producto eliminado del carrito" });
+  } catch (error) {
+    console.error("Error al eliminar producto del carrito:", error);
+    res.status(500).json({ mensaje: "Error al eliminar producto del carrito" });
   }
 });
 
