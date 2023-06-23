@@ -26,8 +26,6 @@
               required
               pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
             />
-            <div class="error" id="email-error">Ingresa un correo valido.</div>
-
             <label for="password">Contraseña:</label>
             <input type="password" id="password" name="password" required />
 
@@ -87,36 +85,34 @@
         var telefono = $("#telefono").val();
         console.log("telefono:", telefono);
 
-        if (contrasena != confirmar_contrasena){
-          alert('Las contraseñas deben coincidir!');
-        }
-        else {
+        if (contrasena != confirmar_contrasena) {
+          alert("Las contraseñas deben coincidir!");
+        } else {
           $.ajax({
-          url: "http://localhost:3000/api/usuarios/register",
-          type: "POST",
-          data: JSON.stringify({
-            nombre_usuario: nombre_usuario,
-            email: email,
-            contrasena: contrasena,
-            tipo_usuario: tipo_usuario,
-            nombre: nombre,
-            apellido: apellido,
-            telefono: telefono, // Add the phone number field
-          }),
-          dataType: "json",
-          contentType: "application/json; charset=UTF-8",
-        })
-          .done(function (data) {
-            alert(data.mensaje);
-            location.replace('/login');
+            url: "http://localhost:3000/api/usuarios/register",
+            type: "POST",
+            data: JSON.stringify({
+              nombre_usuario: nombre_usuario,
+              email: email,
+              contrasena: contrasena,
+              tipo_usuario: tipo_usuario,
+              nombre: nombre,
+              apellido: apellido,
+              telefono: telefono, // Add the phone number field
+            }),
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
           })
-          .fail(function (xhr) {
-            var errorMessage = xhr.responseText || "Error al registrar";
-            alert(errorMessage);
-            console.log(xhr);
-          });
+            .done(function (data) {
+              alert(data.mensaje);
+              location.replace("/login");
+            })
+            .fail(function (xhr) {
+              var errorMessage = xhr.responseText || "Error al registrar";
+              alert(errorMessage);
+              console.log(xhr);
+            });
         }
-        
       });
     </script>
   </body>
