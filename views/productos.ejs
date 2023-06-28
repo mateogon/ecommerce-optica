@@ -26,13 +26,13 @@
           data.forEach(producto => {
             const product = document.createElement("div");
             product.className = "product";
-      product.style.cursor = "pointer";
+			product.style.cursor = "pointer";
             const img = document.createElement("img");
             img.src = producto.image_url;
             img.alt = "Producto " + img.id;
             product.appendChild(img);
 
-            const nombre = document.createElement("h2");
+            const nombre = document.createElement("h1");
             nombre.innerHTML = producto.nombre_producto;
             product.appendChild(nombre);
 

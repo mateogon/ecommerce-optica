@@ -3,46 +3,107 @@
 <head>
 	<title>Tienda en línea de óptica</title>
 	<link rel="stylesheet" href="style.css">
+	
+	<script>
+    // Array con las rutas de las imágenes
+    var imagenes = ["/images/principal/7.jpg", "/images/principal/8.jpg", "/images/principal/9.jpg", "/images/principal/10.jpg", "/images/principal/11.jpg"];
+
+    var indice = 0;
+
+function cambiarImagen() {
+  // Obtener el contenedor de la imagen
+  var contenedor = document.getElementById("imagen-container");
+
+  // Crear un nuevo elemento de imagen
+  var img = document.createElement("img");
+
+  // Establecer el ancho y alto de la imagen
+  img.width = 500; // Ajusta el ancho según tus necesidades
+  img.height = 700; // Ajusta el alto según tus necesidades
+
+  // Cambiar el atributo src de la imagen
+  img.src = imagenes[indice];
+
+  // Aplicar estilos para fijar la imagen a la derecha
+  img.style.position = "fixed";
+  img.style.top = "100px";
+  img.style.right = "70px";
+  img.style.margin = "60px"; // Ajusta el margen según tus necesidades
+
+  // Aplicar efectos de transición, si es necesario
+  img.style.opacity = 0; // Establecer la opacidad inicialmente a 0
+  img.style.transition = "opacity 1s"; // Aplicar una transición de opacidad de 1 segundo
+
+  // Agregar la imagen al contenedor
+  contenedor.innerHTML = ""; // Limpiar el contenido existente
+  contenedor.appendChild(img);
+
+  // Hacer que la imagen aparezca gradualmente
+  setTimeout(function() {
+    img.style.opacity = 1; // Establecer la opacidad a 1 después de un breve retraso
+  }, 100);
+
+  // Hacer que la imagen desaparezca gradualmente
+  setTimeout(function() {
+    img.style.opacity = 0; // Establecer la opacidad a 0 después de un retraso mayor
+  }, 4000);
+
+  // Incrementar el índice para mostrar la próxima imagen en el siguiente intervalo
+  indice++;
+
+  // Reiniciar el índice si se ha mostrado la última imagen
+  if (indice === imagenes.length) {
+    indice = 0;
+  }
+}
+
+
+
+// Cambiar la imagen cada 5 segundos (5000 milisegundos)
+setInterval(cambiarImagen, 5000);
+
+
+  </script>
 </head>
 <body>
 	<%- include("partials/header") %>
 	<main>
 		<div class="index-form">
-		<form id="search-form">
-			<label for="tipo-lente">Tipo de lente:</label>
-			<select id="tipo-lente" name="tipo-lente">
-			  <option value="Lente 1">Lente 1</option>
-			  <option value="Lente 2">Lente 2</option>
-			  <option value="Lente 3">Lente 3</option>
-			  <option value="Lente 4">Lente 4</option>
-			</select><br>
-		  
-			<label for="color">Color:</label>
-			<select id="color" name="color">
-			  <option value="Negro">Negro</option>
-			  <option value="Blanco">Blanco</option>
-			  <option value="Rojo">Rojo</option>
-			  <option value="Azul">Azul</option>
-			</select><br>
-		  
-			<label for="marca">Marca:</label>
-			<select id="marca" name="marca">
-			  <option value="Marca 1">Marca 1</option>
-			  <option value="Marca 2">Marca 2</option>
-			  <option value="Marca 3">Marca 3</option>
-			  <option value="Marca 4">Marca 4</option>
-			</select><br>
-		  
-			<input type="submit" value="Buscar">
-		</form>
-		  
+			<form id="search-form">
+				<label for="tipo-lente">Tipo de lente:</label>
+				<select id="tipo-lente" name="tipo-lente">
+					<option value="Lente 1">Lente 1</option>
+					<option value="Lente 2">Lente 2</option>
+					<option value="Lente 3">Lente 3</option>
+					<option value="Lente 4">Lente 4</option>
+				</select><br>
+				<label for="color">Color:</label>
+				<select id="color" name="color">
+					<option value="Negro">Negro</option>
+					<option value="Blanco">Blanco</option>
+					<option value="Rojo">Rojo</option>
+					<option value="Azul">Azul</option>
+				</select><br>
+				<label for="marca">Marca:</label>
+				<select id="marca" name="marca">
+					<option value="Marca 1">Marca 1</option>
+					<option value="Marca 2">Marca 2</option>
+					<option value="Marca 3">Marca 3</option>
+					<option value="Marca 4">Marca 4</option>
+				</select><br>
+				
 
-		<section class="content">	
-			<div class="products">
-				<!-- Las imágenes se cargarán dinámicamente aquí -->
-			</div>
+				<input type="submit" value="Buscar">
+			</form>
+			<section class="content">
+				<div class="products">
+					<!-- Las imágenes se cargarán dinámicamente aquí -->
+					<div id="imagen-container">
+</div>
+
+				</div>
+			</section>
 		</div>
-		</section>
 	</main>
 
 	<script>
@@ -70,16 +131,18 @@
 					// Manejar los datos recibidos y mostrar los resultados en el front-end
 					const products = document.getElementsByClassName('products')[0];
 					products.innerHTML = '';
+
 					if (data.length === 0) {
 						const aviso = document.createElement('h2');
 						aviso.innerHTML = 'No hay productos que cumplan con lo solicitado.\n';
 						products.appendChild(aviso);
 					}
+
 					// Iterar sobre los productos y crear los elementos de imagen
 					data.forEach(producto => {
 						const product = document.createElement("div");
 						product.className = "product";
-						
+
 						const img = document.createElement("img");
 						img.src = producto.image_url;
 						img.alt = "Producto " + img.id;
@@ -98,34 +161,38 @@
 						precio.innerHTML = producto.precio;
 						product.appendChild(precio);
 
-						if(<%- JSON.stringify(isUserLoggedIn) %>){
+						if (<%- JSON.stringify(isUserLoggedIn) %>) {
 							var user_info = <%- JSON.stringify(session.usuario || {}) %>;
+
 							const boton = document.createElement("button");
 							boton.innerHTML = "Agregar al carrito";
+
 							boton.addEventListener('click', () => {
 								const data = {
-								id_usuario: user_info.id,
-								id_producto: producto.id
+									id_usuario: user_info.id,
+									id_producto: producto.id
 								};
 
 								fetch('/api/carrito', {
-								method: 'POST',
-								headers: {
-									'Content-Type': 'application/json'
-								},
-								body: JSON.stringify(data)
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify(data)
 								})
-								.then(response => response.json())
-								.then(responseData => {
-									alert(responseData.mensaje);
-								})
-								.catch(error => {
-									console.error('Error al agregar producto al carrito:', error);
-									alert('Error al agregar producto al carrito');
-								});
+									.then(response => response.json())
+									.then(responseData => {
+										alert(responseData.mensaje);
+									})
+									.catch(error => {
+										console.error('Error al agregar producto al carrito:', error);
+										alert('Error al agregar producto al carrito');
+									});
 							});
+
 							product.appendChild(boton);
 						}
+
 						products.appendChild(product);
 					});
 				})
@@ -134,7 +201,5 @@
 				});
 		});
 	</script>
-</body>
-</html>
 </body>
 </html>
