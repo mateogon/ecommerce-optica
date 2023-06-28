@@ -178,6 +178,12 @@ const removeFromCart = (id_usuario, id_producto) => {
   );
 };
 
+const removeAllFromCart = (id_usuario) => {
+  return query("DELETE FROM CarritoCompras WHERE id_usuario = $1", [
+    id_usuario,
+  ]);
+};
+
 const addReceta = (id_usuario, ruta_pdf, fecha_subida) => {
   return query(
     "INSERT INTO Recetas (id_usuario, ruta_pdf, fecha_subida) VALUES ($1, $2, $3) RETURNING *",
@@ -208,6 +214,7 @@ module.exports = {
   updateUser,
   addToCart,
   removeFromCart,
+  removeAllFromCart,
   getUsuarios,
   getProductos,
   getCarritoComprasByUser,
