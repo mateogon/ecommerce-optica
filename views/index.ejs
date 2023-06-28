@@ -4,6 +4,10 @@
 	<title>Tienda en línea de óptica</title>
 	<link rel="stylesheet" href="style.css">
 </head>
+<script>
+    
+
+  </script>
 <body>
 	<%- include("partials/header") %>
 	<main>
@@ -40,12 +44,72 @@
 		<section class="content">	
 			<div class="products">
 				<!-- Las imágenes se cargarán dinámicamente aquí -->
+				<div class = "image-container" id="imagen-container">
+				</div>
 			</div>
 		</div>
 		</section>
 	</main>
 
 	<script>
+		// Array con las rutas de las imágenes
+		var imagenes = ["/images/principal/7.jpg", "/images/principal/8.jpg", "/images/principal/9.jpg", "/images/principal/10.jpg", "/images/principal/11.jpg"];
+
+		var indice = 0;
+	
+	function cambiarImagen() {
+	  // Obtener el contenedor de la imagen
+	  var contenedor = document.getElementById("imagen-container");
+	
+	  // Crear un nuevo elemento de imagen
+	  var img = document.createElement("img");
+	
+	  // Establecer el ancho y alto de la imagen
+	  img.width = 500; // Ajusta el ancho según tus necesidades
+	  //img.height = 700; // Ajusta el alto según tus necesidades
+	
+	  // Cambiar el atributo src de la imagen
+	  img.src = imagenes[indice];
+	
+	  // Aplicar estilos para fijar la imagen a la derecha
+	  img.style.position = "fixed";
+	  img.style.top = "120px";
+	  img.style.right = "70px";
+	  
+	  img.style.margin = "10px"; // Ajusta el margen según tus necesidades
+	  //img.style.marginLeft = "60px";
+	  // Aplicar efectos de transición, si es necesario
+	  img.style.opacity = 0; // Establecer la opacidad inicialmente a 0
+	  img.style.transition = "opacity 1s"; // Aplicar una transición de opacidad de 1 segundo
+	
+	  // Agregar la imagen al contenedor
+	  contenedor.innerHTML = ""; // Limpiar el contenido existente
+	  contenedor.appendChild(img);
+	
+	  // Hacer que la imagen aparezca gradualmente
+	  setTimeout(function() {
+		img.style.opacity = 1; // Establecer la opacidad a 1 después de un breve retraso
+	  }, 100);
+	
+	  // Hacer que la imagen desaparezca gradualmente
+	  setTimeout(function() {
+		img.style.opacity = 0; // Establecer la opacidad a 0 después de un retraso mayor
+	  }, 4000);
+	
+	  // Incrementar el índice para mostrar la próxima imagen en el siguiente intervalo
+	  indice++;
+	
+	  // Reiniciar el índice si se ha mostrado la última imagen
+	  if (indice === imagenes.length) {
+		indice = 0;
+	  }
+	}
+	
+	
+	
+	// Cambiar la imagen cada 5 segundos (5000 milisegundos)
+	setInterval(cambiarImagen, 4000);
+	
 		// Agregar lógica de JavaScript para interactuar con la API
 
 		// Obtener referencia al formulario de búsqueda
@@ -71,7 +135,7 @@
 					const products = document.getElementsByClassName('products')[0];
 					products.innerHTML = '';
 					if (data.length === 0) {
-						const aviso = document.createElement('h2');
+						const aviso = document.createElement('h1');
 						aviso.innerHTML = 'No hay productos que cumplan con lo solicitado.\n';
 						products.appendChild(aviso);
 					}

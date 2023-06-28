@@ -231,6 +231,9 @@ button:hover {
   color: #fff;
   padding: 10px;
 }
+.image-container {
+  margin-left: 50px;
+}
 
 .gallery {
   text-align: center;
@@ -266,8 +269,16 @@ button:hover {
 
 .product {
   position: relative;
+  margin: 30px;
 }
-
+.product h2 {
+  padding-left: 100px;
+  padding-right: 100px;
+  justify-self: center;
+  justify-content: center;
+  align-self: center;
+  margin: 30px;
+}
 .product button {
   margin-top: 10px;
 }
