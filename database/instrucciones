@@ -78,7 +78,7 @@ CREATE TABLE Resenas (
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
     FOREIGN KEY (id_producto) REFERENCES Productos(id)
 );
-
+addasdasd
 CREATE TABLE Notificaciones (
     id SERIAL PRIMARY KEY,
     id_usuario INT,
